@@ -53,11 +53,11 @@ function obtenerDatosInmueble() {
 }
 
 // ----------------------------------------------------------------------------
-//  2) Envío del formulario (junta las dos partes y hace POST /inscripciones)
+//  2) Envío del formulario (junta las dos partes y la guarda en localStorage)
 // ----------------------------------------------------------------------------
 const formInscripcion = document.getElementById('form-inscripcion');
 
-formInscripcion.addEventListener('submit', async (evento) => {
+formInscripcion.addEventListener('submit', (evento) => {
   evento.preventDefault();
 
   // Validamos el bloque del solicitante (función de solicitante.js).
@@ -81,20 +81,20 @@ formInscripcion.addEventListener('submit', async (evento) => {
     ...resInmueble.datos
   };
 
-  // Enviamos al backend.
-  try {
-    const creada = await pedirAlServidor('/inscripciones', 'POST', inscripcion);
+  // Guardamos en localStorage. Toda inscripción nueva arranca "pendiente".
+  const creada = agregarRegistro('inscripciones', {
+    ...inscripcion,
+    estado: 'pendiente',
+    aprobado_en: null
+  });
 
-    toastExito(`Inscripción #${creada.id} enviada. Estado: ${creada.estado}.`);
+  toastExito(`Inscripción #${creada.id} enviada. Estado: ${creada.estado}.`);
 
-    // Animación de confirmación sobre el formulario.
-    formInscripcion.classList.add('animate__animated', 'animate__fadeIn');
-    formInscripcion.addEventListener('animationend', () => {
-      formInscripcion.classList.remove('animate__animated', 'animate__fadeIn');
-    }, { once: true });
+  // Animación de confirmación sobre el formulario.
+  formInscripcion.classList.add('animate__animated', 'animate__fadeIn');
+  formInscripcion.addEventListener('animationend', () => {
+    formInscripcion.classList.remove('animate__animated', 'animate__fadeIn');
+  }, { once: true });
 
-    formInscripcion.reset();
-  } catch (error) {
-    toastError(error.message);
-  }
+  formInscripcion.reset();
 });

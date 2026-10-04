@@ -5,7 +5,7 @@
 //   1) Cambiar entre las pestañas "Iniciar sesión" y "Registrarse".
 //   2) Manejar los dos formularios:
 //       - Login: solo valida en el frontend y muestra un toast.
-//       - Registro: valida y GUARDA en la base con POST /usuarios.
+//       - Registro: valida y GUARDA en localStorage.
 // ============================================================================
 
 // ----------------------------------------------------------------------------
@@ -64,11 +64,11 @@ formLogin.addEventListener('submit', (evento) => {
 });
 
 // ----------------------------------------------------------------------------
-//  3) FORMULARIO DE REGISTRO (guarda en la base)
+//  3) FORMULARIO DE REGISTRO (guarda en localStorage)
 // ----------------------------------------------------------------------------
 const formRegistro = document.getElementById('form-registro');
 
-formRegistro.addEventListener('submit', async (evento) => {
+formRegistro.addEventListener('submit', (evento) => {
   evento.preventDefault();
 
   // Leemos los valores de los campos.
@@ -77,7 +77,7 @@ formRegistro.addEventListener('submit', async (evento) => {
   const email = document.getElementById('reg-email').value.trim();
   const mayor18 = document.getElementById('reg-mayor18').checked;
 
-  // --- Validaciones en el frontend (antes de molestar al servidor) ---
+  // --- Validaciones en el frontend (antes de guardar) ---
   if (nombre === '' || apellido === '' || email === '') {
     toastError('Completá nombre, apellido y correo.');
     return;
@@ -87,30 +87,24 @@ formRegistro.addEventListener('submit', async (evento) => {
     return;
   }
 
-  // --- Enviamos al backend ---
-  try {
-    // pedirAlServidor está definido en main.js.
-    const usuarioCreado = await pedirAlServidor('/usuarios', 'POST', {
-      nombre,
-      apellido,
-      email,
-      mayor18
-    });
+  // --- Guardamos en localStorage (agregarRegistro está en main.js) ---
+  const usuarioCreado = agregarRegistro('usuarios', {
+    nombre,
+    apellido,
+    email,
+    mayor18
+  });
 
-    // Éxito: toast + animación en la tarjeta.
-    toastExito(`¡Cuenta creada! Bienvenido/a, ${usuarioCreado.nombre}.`);
+  // Éxito: toast + animación en la tarjeta.
+  toastExito(`¡Cuenta creada! Bienvenido/a, ${usuarioCreado.nombre}.`);
 
-    // Animamos la tarjeta con Animate.css (un "pulso" de confirmación).
-    const tarjeta = document.querySelector('.tarjeta');
-    tarjeta.classList.add('animate__animated', 'animate__pulse');
-    // Sacamos las clases al terminar, para poder repetir la animación.
-    tarjeta.addEventListener('animationend', () => {
-      tarjeta.classList.remove('animate__animated', 'animate__pulse');
-    }, { once: true });
+  // Animamos la tarjeta con Animate.css (un "pulso" de confirmación).
+  const tarjeta = document.querySelector('.tarjeta');
+  tarjeta.classList.add('animate__animated', 'animate__pulse');
+  // Sacamos las clases al terminar, para poder repetir la animación.
+  tarjeta.addEventListener('animationend', () => {
+    tarjeta.classList.remove('animate__animated', 'animate__pulse');
+  }, { once: true });
 
-    formRegistro.reset();
-  } catch (error) {
-    // Si el servidor devolvió un error, lo mostramos.
-    toastError(error.message);
-  }
+  formRegistro.reset();
 });

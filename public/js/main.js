@@ -3,48 +3,44 @@
 // ----------------------------------------------------------------------------
 //  Este archivo se carga en las cuatro páginas. Trae funciones que usamos en
 //  varios lados para no repetir código:
-//    - un "helper" para hablar con el backend (fetch),
+//    - funciones para guardar y leer datos en localStorage,
 //    - el toggle de modo oscuro (recordado con localStorage),
 //    - el reloj del encabezado,
 //    - atajos para mostrar toasts con SweetAlert2.
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-//  1) HELPER DE FETCH
+//  1) GUARDAR Y LEER DATOS CON localStorage
 // ----------------------------------------------------------------------------
-//  fetch() es la función del navegador para pedirle cosas al servidor.
-//  Como siempre la usamos parecido (mandar/recibir JSON, revisar errores),
-//  la envolvemos en una función propia para escribir menos y más claro.
+//  localStorage es una memoria del navegador que guarda TEXTO con un nombre
+//  (una "clave"). Los datos se mantienen aunque cierres la página, pero
+//  quedan solo en ESTE navegador y en ESTA computadora.
 //
-//  "async/await" nos deja escribir código asíncrono como si fuera de arriba
-//  hacia abajo. "await" significa "esperá a que esto termine".
+//  Para guardar listas de objetos las convertimos a texto con JSON.stringify
+//  y al leerlas las volvemos a objeto con JSON.parse.
+//
+//  Usamos dos claves: "usuarios" e "inscripciones". Cada una guarda una lista.
 // ----------------------------------------------------------------------------
-async function pedirAlServidor(url, metodo = 'GET', datos = null) {
-  // Armamos las opciones del pedido.
-  const opciones = {
-    method: metodo,
-    headers: { 'Content-Type': 'application/json' }
-  };
 
-  // Si mandamos datos (POST/PATCH), los convertimos a texto JSON.
-  if (datos) {
-    opciones.body = JSON.stringify(datos);
-  }
+// Devuelve la lista guardada con esa clave (o una lista vacía si no hay nada).
+function leerLista(clave) {
+  const texto = localStorage.getItem(clave);
+  return texto ? JSON.parse(texto) : [];
+}
 
-  // Hacemos el pedido y esperamos la respuesta.
-  const respuesta = await fetch(url, opciones);
+// Guarda la lista completa con esa clave.
+function guardarLista(clave, lista) {
+  localStorage.setItem(clave, JSON.stringify(lista));
+}
 
-  // Convertimos la respuesta a objeto JavaScript.
-  const cuerpo = await respuesta.json();
-
-  // Si el servidor respondió con un error (status 400, 404, 500...),
-  // lanzamos una excepción con el mensaje que mandó el backend.
-  if (!respuesta.ok) {
-    throw new Error(cuerpo.error || 'Ocurrió un error en el servidor.');
-  }
-
-  // Si todo salió bien, devolvemos los datos.
-  return cuerpo;
+// Agrega un registro nuevo con el siguiente id disponible y lo devuelve.
+function agregarRegistro(clave, registro) {
+  const lista = leerLista(clave);
+  const ultimoId = lista.length > 0 ? lista[lista.length - 1].id : 0;
+  const nuevo = { id: ultimoId + 1, ...registro, creado_en: new Date().toISOString() };
+  lista.push(nuevo);
+  guardarLista(clave, lista);
+  return nuevo;
 }
 
 // ----------------------------------------------------------------------------

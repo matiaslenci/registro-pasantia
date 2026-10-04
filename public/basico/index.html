@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <!-- ==========================================================================
-     index.html  →  Página de BIENVENIDA (solo lectura)
-     Sirve para mostrar HTML + CSS y un poco de JavaScript sin guardar datos.
+     basico/index.html  →  Página de inicio SOLO con HTML + CSS
+     Es la misma página de inicio, pero SIN JavaScript: sirve para ver cómo
+     el HTML arma la estructura y el CSS le da el aspecto.
      ========================================================================== -->
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inicio — Registro General de la Propiedad — Santa Fe</title>
+  <title>Inicio (básico) — Registro General de la Propiedad — Santa Fe</title>
 
   <!-- Favicon (el iconito de la pestaña) -->
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
 
   <!-- Tipografías de Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,8 +21,10 @@
   <!-- Animate.css: librería de animaciones lista para usar (solo pegar el link) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-  <!-- Nuestros estilos compartidos -->
-  <link rel="stylesheet" href="css/estilos.css" />
+  <!-- Nuestros estilos compartidos (los mismos que usa todo el sitio) -->
+  <link rel="stylesheet" href="../css/estilos.css" />
+  <!-- Unos pocos estilos extra para el desplegable sin JavaScript -->
+  <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
 
@@ -29,29 +32,13 @@
   <header class="encabezado">
     <div class="barra-superior">
       <div class="marca">
-        <img src="assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <img src="../assets/logo.svg" alt="Escudo institucional" class="logo" />
         <div class="titulos">
           <h1>Registro General de la Propiedad</h1>
           <p>Provincia de Santa Fe</p>
         </div>
       </div>
-      <div class="header-acciones">
-        <!-- El reloj lo llena main.js -->
-        <span class="reloj" id="reloj">🕐 --:--:--</span>
-        <!-- El botón de modo oscuro lo maneja main.js -->
-        <button class="btn-modo" id="btn-modo">🌙 Modo oscuro</button>
-      </div>
     </div>
-
-    <!-- Barra de navegación entre las páginas -->
-    <nav class="nav-principal">
-      <ul>
-        <li><a href="index.html" class="activo">Inicio</a></li>
-        <li><a href="login.html">Acceso / Registro</a></li>
-        <li><a href="inscripcion.html">Inscripción de inmueble</a></li>
-        <li><a href="admin.html">Panel administrativo</a></li>
-      </ul>
-    </nav>
   </header>
 
   <!-- ============================ CONTENIDO ============================ -->
@@ -113,45 +100,46 @@
       </div>
     </section>
 
-    <!-- ACORDEÓN de preguntas frecuentes (se abre/cierra con JS) -->
+    <!-- PREGUNTAS FRECUENTES con <details> y <summary>:
+         el navegador ya sabe abrirlas y cerrarlas solo, sin JavaScript. -->
     <section class="seccion">
       <h2>Preguntas frecuentes</h2>
       <div id="acordeon">
 
-        <div class="acordeon-item">
-          <button class="acordeon-titulo">
+        <details class="acordeon-item">
+          <summary class="acordeon-titulo">
             ¿Necesito registrarme para iniciar un trámite?
             <span class="flecha">▾</span>
-          </button>
+          </summary>
           <div class="acordeon-cuerpo">
             <p>Sí. Para presentar una inscripción te pedimos un registro previo
                con tus datos básicos. Podés hacerlo en la sección
                "Acceso / Registro".</p>
           </div>
-        </div>
+        </details>
 
-        <div class="acordeon-item">
-          <button class="acordeon-titulo">
+        <details class="acordeon-item">
+          <summary class="acordeon-titulo">
             ¿Cuánto demora la aprobación de una inscripción?
             <span class="flecha">▾</span>
-          </button>
+          </summary>
           <div class="acordeon-cuerpo">
             <p>Los trámites ingresan con estado "pendiente" y son revisados por
                un agente del Registro. En esta demo, la aprobación se hace desde
                el panel administrativo.</p>
           </div>
-        </div>
+        </details>
 
-        <div class="acordeon-item">
-          <button class="acordeon-titulo">
+        <details class="acordeon-item">
+          <summary class="acordeon-titulo">
             ¿Los trámites marcados como "urgentes" tienen prioridad?
             <span class="flecha">▾</span>
-          </button>
+          </summary>
           <div class="acordeon-cuerpo">
             <p>Sí. Al cargar la inscripción podés marcar la casilla "Urgente"
                para que el trámite sea atendido con prioridad.</p>
           </div>
-        </div>
+        </details>
 
       </div>
     </section>
@@ -173,28 +161,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- ============================ LIBRERÍAS ============================ -->
-  <!-- SweetAlert2 por CDN (lo usa main.js para los toasts) -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Nuestro JS común -->
-  <script src="js/main.js"></script>
-
-  <!-- ================== JS PROPIO DE ESTA PÁGINA ================== -->
-  <!-- Solo maneja el acordeón. Es cortito, así que va acá directamente. -->
-  <script>
-    // Buscamos todos los títulos del acordeón.
-    const titulos = document.querySelectorAll('.acordeon-titulo');
-    titulos.forEach((titulo) => {
-      titulo.addEventListener('click', () => {
-        // El "item" es el div que contiene al título y al cuerpo.
-        const item = titulo.parentElement;
-        // Alternamos la clase "abierto": el CSS se encarga de mostrar/ocultar.
-        item.classList.toggle('abierto');
-      });
-    });
-  </script>
 
 </body>
 </html>

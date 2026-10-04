@@ -1,0 +1,24 @@
+/* ============================================================================
+   basico/estilos.css  →  Extra para la página básica
+   ----------------------------------------------------------------------------
+   Todo el diseño viene de /css/estilos.css (el mismo del sitio). Acá solo
+   adaptamos el acordeón para que funcione con <details> en vez de JavaScript.
+   ============================================================================ */
+
+/* Ocultamos el triangulito que el navegador pone por defecto en <summary>. */
+.acordeon-titulo {
+  list-style: none;
+}
+.acordeon-titulo::-webkit-details-marker {
+  display: none;
+}
+
+/* [open] es el atributo que el navegador agrega cuando el <details> está abierto.
+   Hace lo mismo que la clase "abierto" de la página original. */
+.acordeon-item[open] .flecha {
+  transform: rotate(180deg);
+}
+.acordeon-item[open] .acordeon-cuerpo {
+  max-height: 300px;
+  padding: 0 18px 16px;
+}

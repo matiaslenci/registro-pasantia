@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!-- ==========================================================================
      admin.html  →  PANEL ADMINISTRATIVO
-     - Lista los usuarios registrados (GET /usuarios).
-     - Lista las inscripciones (GET /inscripciones).
-     - Permite APROBAR una inscripción pendiente (PATCH /inscripciones/:id),
+     - Lista los usuarios registrados (guardados en localStorage).
+     - Lista las inscripciones (guardadas en localStorage).
+     - Permite APROBAR una inscripción pendiente,
        mostrando un "sello" de aprobado hecho con CSS.
      ========================================================================== -->
 <html lang="es">
@@ -12,14 +12,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel administrativo — Registro General de la Propiedad</title>
 
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link rel="stylesheet" href="/css/estilos.css" />
+  <link rel="stylesheet" href="css/estilos.css" />
 </head>
 <body>
 
@@ -27,7 +27,7 @@
   <header class="encabezado">
     <div class="barra-superior">
       <div class="marca">
-        <img src="/assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <img src="assets/logo.svg" alt="Escudo institucional" class="logo" />
         <div class="titulos">
           <h1>Registro General de la Propiedad</h1>
           <p>Provincia de Santa Fe</p>
@@ -40,10 +40,10 @@
     </div>
     <nav class="nav-principal">
       <ul>
-        <li><a href="/index.html">Inicio</a></li>
-        <li><a href="/login.html">Acceso / Registro</a></li>
-        <li><a href="/inscripcion.html">Inscripción de inmueble</a></li>
-        <li><a href="/admin.html" class="activo">Panel administrativo</a></li>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="login.html">Acceso / Registro</a></li>
+        <li><a href="inscripcion.html">Inscripción de inmueble</a></li>
+        <li><a href="admin.html" class="activo">Panel administrativo</a></li>
       </ul>
     </nav>
   </header>
@@ -56,8 +56,7 @@
       <button class="btn btn-secundario btn-pequeno" id="btn-refrescar">↻ Actualizar datos</button>
     </div>
     <p class="nota-info" style="margin:14px 0 26px;">
-      Estos datos vienen <strong>directo de la base</strong> a través del backend
-      (GET /usuarios y GET /inscripciones). Cada vez que registrás un usuario o
+      Estos datos se leen del <strong>localStorage</strong> de tu navegador. Cada vez que registrás un usuario o
       cargás una inscripción, aparece acá.
     </p>
 
@@ -128,7 +127,7 @@
 
   <!-- ============================ LIBRERÍAS ============================ -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="/js/main.js"></script>
+  <script src="js/main.js"></script>
 
   <!-- ================== JS PROPIO DEL PANEL ADMIN ================== -->
   <script>
@@ -154,12 +153,12 @@
     }
 
     // ------------------------------------------------------------------------
-    //  CARGAR USUARIOS  (GET /usuarios)
+    //  CARGAR USUARIOS  (desde localStorage)
     // ------------------------------------------------------------------------
-    async function cargarUsuarios() {
+    function cargarUsuarios() {
       const tbody = document.getElementById('tbody-usuarios');
       try {
-        const usuarios = await pedirAlServidor('/usuarios', 'GET');
+        const usuarios = leerLista('usuarios').reverse(); // los más nuevos primero
 
         if (usuarios.length === 0) {
           tbody.innerHTML = '<tr><td colspan="6" class="texto-centro">Todavía no hay usuarios registrados.</td></tr>';
@@ -183,12 +182,12 @@
     }
 
     // ------------------------------------------------------------------------
-    //  CARGAR INSCRIPCIONES  (GET /inscripciones)
+    //  CARGAR INSCRIPCIONES  (desde localStorage)
     // ------------------------------------------------------------------------
-    async function cargarInscripciones() {
+    function cargarInscripciones() {
       const tbody = document.getElementById('tbody-inscripciones');
       try {
-        const inscripciones = await pedirAlServidor('/inscripciones', 'GET');
+        const inscripciones = leerLista('inscripciones').reverse();
 
         if (inscripciones.length === 0) {
           tbody.innerHTML = '<tr><td colspan="9" class="texto-centro">Todavía no hay inscripciones cargadas.</td></tr>';
@@ -234,17 +233,23 @@
     }
 
     // ------------------------------------------------------------------------
-    //  APROBAR una inscripción  (PATCH /inscripciones/:id)
+    //  APROBAR una inscripción  (actualiza localStorage)
     // ------------------------------------------------------------------------
     //  Es global (window) porque la llamamos desde el onclick del botón.
     // ------------------------------------------------------------------------
-    async function aprobarInscripcion(id) {
+    function aprobarInscripcion(id) {
       try {
-        await pedirAlServidor('/inscripciones/' + id, 'PATCH');
+        // Buscamos la inscripción, le cambiamos el estado y guardamos la lista.
+        const lista = leerLista('inscripciones');
+        const inscripcion = lista.find((i) => i.id === id);
+        inscripcion.estado = 'aprobado';
+        inscripcion.aprobado_en = new Date().toISOString();
+        guardarLista('inscripciones', lista);
+
         toastExito(`Inscripción #${id} aprobada. ✔`);
 
         // Recargamos la tabla para que aparezca el sello.
-        await cargarInscripciones();
+        cargarInscripciones();
 
         // Le damos una animación a la fila recién aprobada.
         const fila = document.getElementById('fila-inscripcion-' + id);

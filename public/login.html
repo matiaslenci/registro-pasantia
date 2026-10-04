@@ -2,7 +2,7 @@
 <!-- ==========================================================================
      login.html  →  ACCESO (login) + REGISTRO
      - El login es SOLO frontend (valida y muestra un toast).
-     - El registro SÍ guarda en la base (POST /usuarios).
+     - El registro SÍ guarda en localStorage.
      ========================================================================== -->
 <html lang="es">
 <head>
@@ -10,14 +10,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acceso / Registro — Registro General de la Propiedad</title>
 
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link rel="stylesheet" href="/css/estilos.css" />
+  <link rel="stylesheet" href="css/estilos.css" />
 </head>
 <body>
 
@@ -25,7 +25,7 @@
   <header class="encabezado">
     <div class="barra-superior">
       <div class="marca">
-        <img src="/assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <img src="assets/logo.svg" alt="Escudo institucional" class="logo" />
         <div class="titulos">
           <h1>Registro General de la Propiedad</h1>
           <p>Provincia de Santa Fe</p>
@@ -38,10 +38,10 @@
     </div>
     <nav class="nav-principal">
       <ul>
-        <li><a href="/index.html">Inicio</a></li>
-        <li><a href="/login.html" class="activo">Acceso / Registro</a></li>
-        <li><a href="/inscripcion.html">Inscripción de inmueble</a></li>
-        <li><a href="/admin.html">Panel administrativo</a></li>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="login.html" class="activo">Acceso / Registro</a></li>
+        <li><a href="inscripcion.html">Inscripción de inmueble</a></li>
+        <li><a href="admin.html">Panel administrativo</a></li>
       </ul>
     </nav>
   </header>
@@ -60,7 +60,7 @@
         <!-- ============ PANEL: INICIAR SESIÓN (solo frontend) ============ -->
         <div id="panel-login">
           <p class="nota-info mt-2" style="margin-bottom:18px;">
-            El inicio de sesión de esta demo <strong>no valida contra la base</strong>:
+            El inicio de sesión de esta demo <strong>no valida contra los datos guardados</strong>:
             solo comprueba que completes los campos y te muestra un aviso.
           </p>
           <form class="formulario" id="form-login" novalidate>
@@ -76,11 +76,11 @@
           </form>
         </div>
 
-        <!-- ============ PANEL: REGISTRARSE (guarda en la base) ============ -->
+        <!-- ============ PANEL: REGISTRARSE (guarda en localStorage) ============ -->
         <div id="panel-registro" class="oculto">
           <p class="nota-info mt-2" style="margin-bottom:18px;">
-            El registro <strong>sí guarda</strong> los datos en la base a través
-            del backend (POST /usuarios). Después vas a poder verlo en el panel
+            El registro <strong>sí guarda</strong> los datos en el localStorage
+            del navegador. Después vas a poder verlo en el panel
             administrativo.
           </p>
           <form class="formulario" id="form-registro" novalidate>
@@ -127,7 +127,7 @@
 
   <!-- ============================ LIBRERÍAS ============================ -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="/js/main.js"></script>
-  <script src="/js/login.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>
