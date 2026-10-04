@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+     login.html  →  ACCESO (login) + REGISTRO
+     - El login es SOLO frontend (valida y muestra un toast).
+     - El registro SÍ guarda en la base (POST /usuarios).
+     ========================================================================== -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso / Registro — Registro General de la Propiedad</title>
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="/css/estilos.css" />
+</head>
+<body>
+
+  <!-- ====================== ENCABEZADO (igual en todas) ====================== -->
+  <header class="encabezado">
+    <div class="barra-superior">
+      <div class="marca">
+        <img src="/assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <div class="titulos">
+          <h1>Registro General de la Propiedad</h1>
+          <p>Provincia de Santa Fe</p>
+        </div>
+      </div>
+      <div class="header-acciones">
+        <span class="reloj" id="reloj">🕐 --:--:--</span>
+        <button class="btn-modo" id="btn-modo">🌙 Modo oscuro</button>
+      </div>
+    </div>
+    <nav class="nav-principal">
+      <ul>
+        <li><a href="/index.html">Inicio</a></li>
+        <li><a href="/login.html" class="activo">Acceso / Registro</a></li>
+        <li><a href="/inscripcion.html">Inscripción de inmueble</a></li>
+        <li><a href="/admin.html">Panel administrativo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============================ CONTENIDO ============================ -->
+  <main class="contenedor">
+    <section class="seccion" style="max-width: 560px; margin: 30px auto;">
+
+      <div class="tarjeta">
+        <!-- Pestañas para elegir entre Iniciar sesión y Registrarse -->
+        <div class="pestanas">
+          <button class="pestana activa" id="tab-login">Iniciar sesión</button>
+          <button class="pestana" id="tab-registro">Registrarse</button>
+        </div>
+
+        <!-- ============ PANEL: INICIAR SESIÓN (solo frontend) ============ -->
+        <div id="panel-login">
+          <p class="nota-info mt-2" style="margin-bottom:18px;">
+            El inicio de sesión de esta demo <strong>no valida contra la base</strong>:
+            solo comprueba que completes los campos y te muestra un aviso.
+          </p>
+          <form class="formulario" id="form-login" novalidate>
+            <div class="campo">
+              <label for="login-email">Correo electrónico</label>
+              <input type="email" id="login-email" placeholder="tu@email.com" />
+            </div>
+            <div class="campo">
+              <label for="login-clave">Contraseña</label>
+              <input type="password" id="login-clave" placeholder="••••••••" />
+            </div>
+            <button type="submit" class="btn">Ingresar</button>
+          </form>
+        </div>
+
+        <!-- ============ PANEL: REGISTRARSE (guarda en la base) ============ -->
+        <div id="panel-registro" class="oculto">
+          <p class="nota-info mt-2" style="margin-bottom:18px;">
+            El registro <strong>sí guarda</strong> los datos en la base a través
+            del backend (POST /usuarios). Después vas a poder verlo en el panel
+            administrativo.
+          </p>
+          <form class="formulario" id="form-registro" novalidate>
+            <div class="fila">
+              <div class="campo">
+                <label for="reg-nombre">Nombre</label>
+                <input type="text" id="reg-nombre" placeholder="Juan" />
+              </div>
+              <div class="campo">
+                <label for="reg-apellido">Apellido</label>
+                <input type="text" id="reg-apellido" placeholder="Pérez" />
+              </div>
+            </div>
+            <div class="campo">
+              <label for="reg-email">Correo electrónico</label>
+              <input type="email" id="reg-email" placeholder="juan@email.com" />
+            </div>
+            <div class="campo-check">
+              <input type="checkbox" id="reg-mayor18" />
+              <label for="reg-mayor18">Declaro ser mayor de 18 años</label>
+            </div>
+            <button type="submit" class="btn">Crear cuenta</button>
+          </form>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="pie">
+    <div class="contenedor">
+      <div>
+        <h4>Registro General de la Propiedad</h4>
+        <p>Provincia de Santa Fe — Portal de trámites (demo didáctica)</p>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>✉ contacto@rgp.santafe.gob.ar (ejemplo)</p>
+        <p>☎ (0342) 000-0000 (ejemplo)</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ LIBRERÍAS ============================ -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+     admin.html  →  PANEL ADMINISTRATIVO
+     - Lista los usuarios registrados (GET /usuarios).
+     - Lista las inscripciones (GET /inscripciones).
+     - Permite APROBAR una inscripción pendiente (PATCH /inscripciones/:id),
+       mostrando un "sello" de aprobado hecho con CSS.
+     ========================================================================== -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel administrativo — Registro General de la Propiedad</title>
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="/css/estilos.css" />
+</head>
+<body>
+
+  <!-- ====================== ENCABEZADO ====================== -->
+  <header class="encabezado">
+    <div class="barra-superior">
+      <div class="marca">
+        <img src="/assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <div class="titulos">
+          <h1>Registro General de la Propiedad</h1>
+          <p>Provincia de Santa Fe</p>
+        </div>
+      </div>
+      <div class="header-acciones">
+        <span class="reloj" id="reloj">🕐 --:--:--</span>
+        <button class="btn-modo" id="btn-modo">🌙 Modo oscuro</button>
+      </div>
+    </div>
+    <nav class="nav-principal">
+      <ul>
+        <li><a href="/index.html">Inicio</a></li>
+        <li><a href="/login.html">Acceso / Registro</a></li>
+        <li><a href="/inscripcion.html">Inscripción de inmueble</a></li>
+        <li><a href="/admin.html" class="activo">Panel administrativo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============================ CONTENIDO ============================ -->
+  <main class="contenedor">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:26px;">
+      <h2 style="margin:0;">Panel administrativo</h2>
+      <button class="btn btn-secundario btn-pequeno" id="btn-refrescar">↻ Actualizar datos</button>
+    </div>
+    <p class="nota-info" style="margin:14px 0 26px;">
+      Estos datos vienen <strong>directo de la base</strong> a través del backend
+      (GET /usuarios y GET /inscripciones). Cada vez que registrás un usuario o
+      cargás una inscripción, aparece acá.
+    </p>
+
+    <!-- ===================== TABLA DE USUARIOS ===================== -->
+    <section class="seccion">
+      <h2>Usuarios registrados</h2>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Email</th>
+              <th>Mayor de 18</th>
+              <th>Registrado</th>
+            </tr>
+          </thead>
+          <!-- Este cuerpo lo llena el JavaScript de abajo -->
+          <tbody id="tbody-usuarios">
+            <tr><td colspan="6" class="texto-centro">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== TABLA DE INSCRIPCIONES ===================== -->
+    <section class="seccion">
+      <h2>Inscripciones</h2>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Solicitante</th>
+              <th>DNI</th>
+              <th>Inmueble</th>
+              <th>Tipo</th>
+              <th>Urg.</th>
+              <th>Servicios</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-inscripciones">
+            <tr><td colspan="9" class="texto-centro">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="pie">
+    <div class="contenedor">
+      <div>
+        <h4>Registro General de la Propiedad</h4>
+        <p>Provincia de Santa Fe — Portal de trámites (demo didáctica)</p>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>✉ contacto@rgp.santafe.gob.ar (ejemplo)</p>
+        <p>☎ (0342) 000-0000 (ejemplo)</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ LIBRERÍAS ============================ -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/main.js"></script>
+
+  <!-- ================== JS PROPIO DEL PANEL ADMIN ================== -->
+  <script>
+    // ------------------------------------------------------------------------
+    //  Pequeña utilidad: convertir una fecha ISO en algo legible (dd/mm/aaaa hh:mm)
+    // ------------------------------------------------------------------------
+    function formatearFecha(iso) {
+      if (!iso) return '—';
+      const f = new Date(iso);
+      if (isNaN(f.getTime())) return iso; // por si viniera solo "AAAA-MM-DD"
+      return f.toLocaleString('es-AR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+    // Para fechas que son solo día (la fecha del trámite, sin hora).
+    function formatearSoloFecha(iso) {
+      if (!iso) return '—';
+      // Partimos "AAAA-MM-DD" y lo damos vuelta a "DD/MM/AAAA".
+      const partes = iso.split('T')[0].split('-');
+      if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      return iso;
+    }
+
+    // ------------------------------------------------------------------------
+    //  CARGAR USUARIOS  (GET /usuarios)
+    // ------------------------------------------------------------------------
+    async function cargarUsuarios() {
+      const tbody = document.getElementById('tbody-usuarios');
+      try {
+        const usuarios = await pedirAlServidor('/usuarios', 'GET');
+
+        if (usuarios.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="texto-centro">Todavía no hay usuarios registrados.</td></tr>';
+          return;
+        }
+
+        // Armamos una fila <tr> por cada usuario.
+        tbody.innerHTML = usuarios.map((u) => `
+          <tr>
+            <td>${u.id}</td>
+            <td>${u.nombre}</td>
+            <td>${u.apellido}</td>
+            <td>${u.email}</td>
+            <td class="texto-centro">${u.mayor18 ? '✅' : '❌'}</td>
+            <td>${formatearFecha(u.creado_en)}</td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="6" class="texto-centro">Error al cargar: ${error.message}</td></tr>`;
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    //  CARGAR INSCRIPCIONES  (GET /inscripciones)
+    // ------------------------------------------------------------------------
+    async function cargarInscripciones() {
+      const tbody = document.getElementById('tbody-inscripciones');
+      try {
+        const inscripciones = await pedirAlServidor('/inscripciones', 'GET');
+
+        if (inscripciones.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="texto-centro">Todavía no hay inscripciones cargadas.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = inscripciones.map((i) => {
+          // Columna de estado: etiqueta pendiente/aprobado.
+          const etiquetaEstado = i.estado === 'aprobado'
+            ? '<span class="estado estado-aprobado">Aprobado</span>'
+            : '<span class="estado estado-pendiente">Pendiente</span>';
+
+          // Columna de acción: si está pendiente, botón "Aprobar".
+          // Si ya está aprobado, mostramos el SELLO con la fecha de aprobación.
+          let accion;
+          if (i.estado === 'aprobado') {
+            accion = `
+              <div class="sello">
+                Aprobado
+                <span class="sello-fecha">${formatearFecha(i.aprobado_en)}</span>
+              </div>`;
+          } else {
+            accion = `<button class="btn btn-aprobar" onclick="aprobarInscripcion(${i.id})">Aprobar</button>`;
+          }
+
+          return `
+            <tr id="fila-inscripcion-${i.id}">
+              <td>${i.id}</td>
+              <td>${i.nombre} ${i.apellido}</td>
+              <td>${i.dni}</td>
+              <td>${i.direccion}</td>
+              <td>${i.tipo_tramite}</td>
+              <td class="texto-centro">${i.urgente ? '⚠️' : '—'}</td>
+              <td>${i.servicios ? i.servicios : '—'}</td>
+              <td>${etiquetaEstado}</td>
+              <td>${accion}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="9" class="texto-centro">Error al cargar: ${error.message}</td></tr>`;
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    //  APROBAR una inscripción  (PATCH /inscripciones/:id)
+    // ------------------------------------------------------------------------
+    //  Es global (window) porque la llamamos desde el onclick del botón.
+    // ------------------------------------------------------------------------
+    async function aprobarInscripcion(id) {
+      try {
+        await pedirAlServidor('/inscripciones/' + id, 'PATCH');
+        toastExito(`Inscripción #${id} aprobada. ✔`);
+
+        // Recargamos la tabla para que aparezca el sello.
+        await cargarInscripciones();
+
+        // Le damos una animación a la fila recién aprobada.
+        const fila = document.getElementById('fila-inscripcion-' + id);
+        if (fila) {
+          fila.classList.add('animate__animated', 'animate__flash');
+        }
+      } catch (error) {
+        toastError(error.message);
+      }
+    }
+    // La exponemos globalmente para el onclick.
+    window.aprobarInscripcion = aprobarInscripcion;
+
+    // ------------------------------------------------------------------------
+    //  ARRANQUE: cargar todo al abrir la página, y con el botón "Actualizar".
+    // ------------------------------------------------------------------------
+    function cargarTodo() {
+      cargarUsuarios();
+      cargarInscripciones();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarTodo();
+      document.getElementById('btn-refrescar').addEventListener('click', cargarTodo);
+    });
+  </script>
+
+</body>
+</html>

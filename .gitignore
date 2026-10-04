@@ -1,0 +1,9 @@
+# Dependencias que se instalan con "npm install" (no se suben al repo)
+node_modules/
+
+# Base de datos generada automáticamente al iniciar el servidor
+*.db
+
+# Logs y archivos temporales varios
+*.log
+.DS_Store

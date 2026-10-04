@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+     index.html  →  Página de BIENVENIDA (solo lectura)
+     Sirve para mostrar HTML + CSS y un poco de JavaScript sin tocar la base.
+     ========================================================================== -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio — Registro General de la Propiedad — Santa Fe</title>
+
+  <!-- Favicon (el iconito de la pestaña) -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <!-- Tipografías de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Animate.css: librería de animaciones lista para usar (solo pegar el link) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+  <!-- Nuestros estilos compartidos -->
+  <link rel="stylesheet" href="/css/estilos.css" />
+</head>
+<body>
+
+  <!-- ====================== ENCABEZADO INSTITUCIONAL ====================== -->
+  <header class="encabezado">
+    <div class="barra-superior">
+      <div class="marca">
+        <img src="/assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <div class="titulos">
+          <h1>Registro General de la Propiedad</h1>
+          <p>Provincia de Santa Fe</p>
+        </div>
+      </div>
+      <div class="header-acciones">
+        <!-- El reloj lo llena main.js -->
+        <span class="reloj" id="reloj">🕐 --:--:--</span>
+        <!-- El botón de modo oscuro lo maneja main.js -->
+        <button class="btn-modo" id="btn-modo">🌙 Modo oscuro</button>
+      </div>
+    </div>
+
+    <!-- Barra de navegación entre las páginas -->
+    <nav class="nav-principal">
+      <ul>
+        <li><a href="/index.html" class="activo">Inicio</a></li>
+        <li><a href="/login.html">Acceso / Registro</a></li>
+        <li><a href="/inscripcion.html">Inscripción de inmueble</a></li>
+        <li><a href="/admin.html">Panel administrativo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============================ CONTENIDO ============================ -->
+  <main class="contenedor">
+
+    <!-- HERO de bienvenida (con una animación de Animate.css al aparecer) -->
+    <section class="hero animate__animated animate__fadeInUp">
+      <h2>Bienvenido/a al portal de trámites</h2>
+      <p>
+        Desde este portal podés conocer los trámites disponibles, registrarte
+        y presentar la inscripción de un inmueble de forma digital, sin tener
+        que acercarte a la mesa de entradas.
+      </p>
+    </section>
+
+    <!-- CARDS de trámites, maquetadas con CSS grid -->
+    <section class="seccion" style="margin-top: 34px;">
+      <h2>Trámites que podés realizar</h2>
+      <div class="grid-tramites">
+        <article class="card-tramite">
+          <div class="icono">📄</div>
+          <h3>Informe de dominio</h3>
+          <p>Conocé la situación jurídica actual de un inmueble: titular,
+             hipotecas y embargos vigentes.</p>
+        </article>
+        <article class="card-tramite">
+          <div class="icono">📜</div>
+          <h3>Certificado</h3>
+          <p>Documento con validez legal que reserva la prioridad para
+             escriturar o constituir derechos sobre un inmueble.</p>
+        </article>
+        <article class="card-tramite">
+          <div class="icono">🏠</div>
+          <h3>Inscripción de inmueble</h3>
+          <p>Registrá un inmueble nuevo o una modificación. Podés iniciarlo
+             online desde la sección "Inscripción de inmueble".</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- TABLA de horarios de atención -->
+    <section class="seccion">
+      <h2>Horarios de atención</h2>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Mesa de entradas</th>
+              <th>Atención al público</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Lunes a Jueves</td><td>07:00 a 13:00</td><td>08:00 a 12:30</td></tr>
+            <tr><td>Viernes</td><td>07:00 a 12:00</td><td>08:00 a 11:30</td></tr>
+            <tr><td>Sábados, domingos y feriados</td><td>Cerrado</td><td>Cerrado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ACORDEÓN de preguntas frecuentes (se abre/cierra con JS) -->
+    <section class="seccion">
+      <h2>Preguntas frecuentes</h2>
+      <div id="acordeon">
+
+        <div class="acordeon-item">
+          <button class="acordeon-titulo">
+            ¿Necesito registrarme para iniciar un trámite?
+            <span class="flecha">▾</span>
+          </button>
+          <div class="acordeon-cuerpo">
+            <p>Sí. Para presentar una inscripción te pedimos un registro previo
+               con tus datos básicos. Podés hacerlo en la sección
+               "Acceso / Registro".</p>
+          </div>
+        </div>
+
+        <div class="acordeon-item">
+          <button class="acordeon-titulo">
+            ¿Cuánto demora la aprobación de una inscripción?
+            <span class="flecha">▾</span>
+          </button>
+          <div class="acordeon-cuerpo">
+            <p>Los trámites ingresan con estado "pendiente" y son revisados por
+               un agente del Registro. En esta demo, la aprobación se hace desde
+               el panel administrativo.</p>
+          </div>
+        </div>
+
+        <div class="acordeon-item">
+          <button class="acordeon-titulo">
+            ¿Los trámites marcados como "urgentes" tienen prioridad?
+            <span class="flecha">▾</span>
+          </button>
+          <div class="acordeon-cuerpo">
+            <p>Sí. Al cargar la inscripción podés marcar la casilla "Urgente"
+               para que el trámite sea atendido con prioridad.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="pie">
+    <div class="contenedor">
+      <div>
+        <h4>Registro General de la Propiedad</h4>
+        <p>Provincia de Santa Fe — Portal de trámites (demo didáctica)</p>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>📍 Mesa de entradas — Santa Fe capital</p>
+        <p>✉ contacto@rgp.santafe.gob.ar (ejemplo)</p>
+        <p>☎ (0342) 000-0000 (ejemplo)</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ LIBRERÍAS ============================ -->
+  <!-- SweetAlert2 por CDN (lo usa main.js para los toasts) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Nuestro JS común -->
+  <script src="/js/main.js"></script>
+
+  <!-- ================== JS PROPIO DE ESTA PÁGINA ================== -->
+  <!-- Solo maneja el acordeón. Es cortito, así que va acá directamente. -->
+  <script>
+    // Buscamos todos los títulos del acordeón.
+    const titulos = document.querySelectorAll('.acordeon-titulo');
+    titulos.forEach((titulo) => {
+      titulo.addEventListener('click', () => {
+        // El "item" es el div que contiene al título y al cuerpo.
+        const item = titulo.parentElement;
+        // Alternamos la clase "abierto": el CSS se encarga de mostrar/ocultar.
+        item.classList.toggle('abierto');
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+     inscripcion.html  →  Formulario de INSCRIPCIÓN DE INMUEBLE
+     El formulario tiene DOS bloques manejados por dos archivos JS distintos
+     (a propósito, para dividir el trabajo entre dos personas):
+        - solicitante.js  → datos del solicitante
+        - inmueble.js     → datos del inmueble + envío final
+     ========================================================================== -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscripción de inmueble — Registro General de la Propiedad</title>
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="/css/estilos.css" />
+</head>
+<body>
+
+  <!-- ====================== ENCABEZADO ====================== -->
+  <header class="encabezado">
+    <div class="barra-superior">
+      <div class="marca">
+        <img src="/assets/logo.svg" alt="Escudo institucional" class="logo" />
+        <div class="titulos">
+          <h1>Registro General de la Propiedad</h1>
+          <p>Provincia de Santa Fe</p>
+        </div>
+      </div>
+      <div class="header-acciones">
+        <span class="reloj" id="reloj">🕐 --:--:--</span>
+        <button class="btn-modo" id="btn-modo">🌙 Modo oscuro</button>
+      </div>
+    </div>
+    <nav class="nav-principal">
+      <ul>
+        <li><a href="/index.html">Inicio</a></li>
+        <li><a href="/login.html">Acceso / Registro</a></li>
+        <li><a href="/inscripcion.html" class="activo">Inscripción de inmueble</a></li>
+        <li><a href="/admin.html">Panel administrativo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============================ CONTENIDO ============================ -->
+  <main class="contenedor">
+    <section class="seccion" style="margin-top: 28px;">
+      <h2>Inscripción de inmueble</h2>
+      <p class="nota-info" style="margin-bottom: 22px;">
+        Completá los datos del solicitante y del inmueble. Al enviar, el trámite
+        se guarda en la base con estado <strong>pendiente</strong> y luego puede
+        aprobarse desde el panel administrativo.
+      </p>
+
+      <!-- Un solo <form> que contiene los dos bloques -->
+      <form id="form-inscripcion" novalidate>
+
+        <!-- =============== BLOQUE 1: SOLICITANTE (solicitante.js) =============== -->
+        <div class="bloque-form">
+          <h3>1 · Datos del solicitante</h3>
+          <div class="formulario">
+            <div class="fila">
+              <div class="campo">
+                <label for="sol-nombre">Nombre *</label>
+                <input type="text" id="sol-nombre" placeholder="Juan" />
+              </div>
+              <div class="campo">
+                <label for="sol-apellido">Apellido *</label>
+                <input type="text" id="sol-apellido" placeholder="Pérez" />
+              </div>
+            </div>
+            <div class="fila">
+              <div class="campo">
+                <label for="sol-dni">DNI *</label>
+                <input type="text" id="sol-dni" placeholder="30123456" inputmode="numeric" />
+                <span class="ayuda">Solo números, 7 u 8 dígitos.</span>
+              </div>
+              <div class="campo">
+                <label for="sol-telefono">Teléfono</label>
+                <input type="tel" id="sol-telefono" placeholder="342 500 0000" />
+              </div>
+            </div>
+            <div class="campo">
+              <label for="sol-email">Correo electrónico *</label>
+              <input type="email" id="sol-email" placeholder="juan@email.com" />
+            </div>
+          </div>
+        </div>
+
+        <!-- =============== BLOQUE 2: INMUEBLE (inmueble.js) =============== -->
+        <div class="bloque-form">
+          <h3>2 · Datos del inmueble</h3>
+          <div class="formulario">
+            <div class="campo">
+              <label for="inm-direccion">Dirección del inmueble *</label>
+              <input type="text" id="inm-direccion" placeholder="San Martín 1234, Santa Fe" />
+            </div>
+
+            <div class="fila">
+              <div class="campo">
+                <label for="inm-tipo">Tipo de trámite *</label>
+                <select id="inm-tipo">
+                  <option value="">— Elegí una opción —</option>
+                  <option value="Primera inscripción">Primera inscripción</option>
+                  <option value="Transferencia">Transferencia de dominio</option>
+                  <option value="Modificación">Modificación / rectificación</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="inm-fecha">Fecha del trámite *</label>
+                <input type="date" id="inm-fecha" />
+                <span class="ayuda">No puede ser una fecha futura.</span>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label for="inm-servicios">Servicios del inmueble</label>
+              <!-- Selección múltiple: se elige con Ctrl/Cmd + clic -->
+              <select id="inm-servicios" multiple>
+                <option value="agua">Agua</option>
+                <option value="luz">Luz</option>
+                <option value="gas">Gas</option>
+                <option value="cloacas">Cloacas</option>
+              </select>
+              <span class="ayuda">Mantené Ctrl (o Cmd en Mac) para elegir varios.</span>
+            </div>
+
+            <div class="campo">
+              <label for="inm-observaciones">Observaciones</label>
+              <textarea id="inm-observaciones" placeholder="Detalles adicionales del inmueble o del trámite..."></textarea>
+            </div>
+
+            <div class="campo-check">
+              <input type="checkbox" id="inm-urgente" />
+              <label for="inm-urgente">Marcar como trámite urgente</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <button type="submit" class="btn" style="width: 100%;">
+          Enviar inscripción
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="pie">
+    <div class="contenedor">
+      <div>
+        <h4>Registro General de la Propiedad</h4>
+        <p>Provincia de Santa Fe — Portal de trámites (demo didáctica)</p>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>✉ contacto@rgp.santafe.gob.ar (ejemplo)</p>
+        <p>☎ (0342) 000-0000 (ejemplo)</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ LIBRERÍAS ============================ -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/main.js"></script>
+  <!-- Ojo con el ORDEN: primero solicitante.js (define su función), y después
+       inmueble.js, que usa ambas partes y coordina el envío. -->
+  <script src="/js/solicitante.js"></script>
+  <script src="/js/inmueble.js"></script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+/* ==========================================================================
+   estilos.css  →  La CAPA DE PRESENTACIÓN (cómo se ve todo)
+   --------------------------------------------------------------------------
+   Estos estilos son COMPARTIDOS por las cuatro páginas.
+   Usamos "variables CSS" (las que empiezan con --) para definir la paleta
+   institucional en un solo lugar. Cambiando una variable, cambia toda la web.
+   El modo oscuro funciona justamente reescribiendo esas variables.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1) PALETA Y VARIABLES (modo claro, por defecto)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Colores institucionales: azules y grises sobrios */
+  --color-primario: #0b3d68;        /* azul institucional profundo */
+  --color-primario-claro: #14568c;  /* azul un poco más claro */
+  --color-acento: #c9a227;          /* dorado sobrio (detalles/sellos) */
+  --color-fondo: #f4f6f9;           /* fondo general gris muy claro */
+  --color-superficie: #ffffff;      /* tarjetas, cajas, formularios */
+  --color-texto: #1c2733;           /* texto principal casi negro */
+  --color-texto-suave: #5a6b7b;     /* texto secundario grisáceo */
+  --color-borde: #d5dde5;           /* bordes suaves */
+  --color-exito: #1e7d46;           /* verde de aprobación */
+  --color-error: #b23b3b;           /* rojo de error */
+
+  /* Sombras y radios reutilizables */
+  --sombra: 0 2px 10px rgba(11, 61, 104, 0.08);
+  --sombra-fuerte: 0 6px 24px rgba(11, 61, 104, 0.15);
+  --radio: 10px;
+
+  /* Tipografías (se cargan por Google Fonts en cada HTML) */
+  --fuente-titulos: 'Merriweather', Georgia, serif;
+  --fuente-texto: 'Open Sans', 'Segoe UI', sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   2) MODO OSCURO
+   --------------------------------------------------------------------------
+   Cuando el <body> tiene la clase "modo-oscuro", reescribimos las variables.
+   No hace falta tocar el resto del CSS: todo usa las variables de arriba.
+   -------------------------------------------------------------------------- */
+body.modo-oscuro {
+  --color-primario: #4d94d1;
+  --color-primario-claro: #6aa9db;
+  --color-acento: #e0b83a;
+  --color-fondo: #0f1620;
+  --color-superficie: #1a2532;
+  --color-texto: #e7edf3;
+  --color-texto-suave: #9fb0c0;
+  --color-borde: #2c3a49;
+  --sombra: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --sombra-fuerte: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   3) RESET SUAVE Y BASE
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;       /* el padding no agranda los elementos */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente-texto);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.6;
+  /* transición suave al cambiar de modo claro/oscuro */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3 {
+  font-family: var(--fuente-titulos);
+  color: var(--color-primario);
+  line-height: 1.3;
+}
+
+a {
+  color: var(--color-primario-claro);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Contenedor centrado y con ancho máximo, reutilizable */
+.contenedor {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --------------------------------------------------------------------------
+   4) ENCABEZADO INSTITUCIONAL (header + nav) — compartido
+   -------------------------------------------------------------------------- */
+.encabezado {
+  background-color: var(--color-primario);
+  color: #fff;
+  box-shadow: var(--sombra);
+}
+
+.encabezado .barra-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  max-width: 1050px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.marca .logo {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.marca .titulos h1 {
+  color: #fff;
+  font-size: 1.15rem;
+  margin: 0;
+}
+.marca .titulos p {
+  color: #cfe0f0;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+/* Zona derecha del header: reloj + botón de modo oscuro */
+.header-acciones {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.reloj {
+  font-variant-numeric: tabular-nums;   /* números de ancho fijo, no "bailan" */
+  font-size: 0.95rem;
+  color: #eaf2fa;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.btn-modo {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+.btn-modo:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Barra de navegación */
+.nav-principal {
+  background-color: var(--color-primario-claro);
+}
+.nav-principal ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+.nav-principal a {
+  display: block;
+  color: #fff;
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  border-bottom: 3px solid transparent;
+}
+.nav-principal a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+}
+/* La página actual se marca con la clase "activo" en su enlace */
+.nav-principal a.activo {
+  border-bottom-color: var(--color-acento);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   5) CONTENIDO PRINCIPAL Y TARJETAS
+   -------------------------------------------------------------------------- */
+main {
+  padding: 30px 0 60px;
+}
+
+.seccion {
+  margin-bottom: 40px;
+}
+.seccion > h2 {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-borde);
+}
+
+/* Caja/tarjeta genérica sobre "superficie" */
+.tarjeta {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 22px;
+}
+
+/* --------------------------------------------------------------------------
+   6) HERO (bienvenida de la portada)
+   -------------------------------------------------------------------------- */
+.hero {
+  background: linear-gradient(135deg, var(--color-primario), var(--color-primario-claro));
+  color: #fff;
+  border-radius: var(--radio);
+  padding: 46px 34px;
+  box-shadow: var(--sombra-fuerte);
+  margin-top: 24px;
+}
+.hero h2 {
+  color: #fff;
+  font-size: 1.9rem;
+  margin-bottom: 10px;
+}
+.hero p {
+  color: #e6f0fa;
+  max-width: 640px;
+  font-size: 1.05rem;
+}
+
+/* --------------------------------------------------------------------------
+   7) GRID DE TRÁMITES (cards)
+   -------------------------------------------------------------------------- */
+.grid-tramites {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.card-tramite {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-top: 4px solid var(--color-primario);
+  border-radius: var(--radio);
+  padding: 22px;
+  box-shadow: var(--sombra);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-tramite:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-fuerte);
+}
+.card-tramite .icono {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+.card-tramite h3 {
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+}
+.card-tramite p {
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   8) TABLAS (horarios y panel admin)
+   -------------------------------------------------------------------------- */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-superficie);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+.tabla th,
+.tabla td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 0.92rem;
+}
+.tabla th {
+  background-color: var(--color-primario);
+  color: #fff;
+  font-weight: 600;
+}
+.tabla tbody tr:hover {
+  background-color: rgba(11, 61, 104, 0.05);
+}
+/* Contenedor para que las tablas anchas puedan scrollear en pantallas chicas */
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+/* --------------------------------------------------------------------------
+   9) ACORDEÓN DE PREGUNTAS FRECUENTES
+   -------------------------------------------------------------------------- */
+.acordeon-item {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.acordeon-titulo {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 16px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.acordeon-titulo .flecha {
+  transition: transform 0.25s ease;
+  color: var(--color-primario);
+}
+/* Cuando el item está abierto, giramos la flechita */
+.acordeon-item.abierto .flecha {
+  transform: rotate(180deg);
+}
+.acordeon-cuerpo {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 18px;
+  color: var(--color-texto-suave);
+}
+.acordeon-item.abierto .acordeon-cuerpo {
+  max-height: 300px;
+  padding: 0 18px 16px;
+}
+
+/* --------------------------------------------------------------------------
+   10) FORMULARIOS (login, registro, inscripción)
+   -------------------------------------------------------------------------- */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.campo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-texto);
+}
+.campo .ayuda {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+}
+.campo input[type="text"],
+.campo input[type="email"],
+.campo input[type="tel"],
+.campo input[type="date"],
+.campo input[type="password"],
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(11, 61, 104, 0.15);
+}
+.campo textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+/* select múltiple un poco más alto para que se vean varias opciones */
+.campo select[multiple] {
+  min-height: 120px;
+}
+
+/* Fila para poner campos lado a lado en pantallas grandes */
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Checkbox con su etiqueta al lado */
+.campo-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.campo-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.campo-check label {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Cada bloque temático del formulario grande (solicitante / inmueble) */
+.bloque-form {
+  border: 1px solid var(--color-borde);
+  border-left: 4px solid var(--color-primario);
+  border-radius: var(--radio);
+  padding: 20px;
+  margin-bottom: 22px;
+  background-color: var(--color-superficie);
+}
+.bloque-form h3 {
+  margin-bottom: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   11) BOTONES
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-block;
+  background-color: var(--color-primario);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-family: inherit;
+}
+.btn:hover {
+  background-color: var(--color-primario-claro);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-secundario {
+  background-color: transparent;
+  color: var(--color-primario);
+  border: 1px solid var(--color-primario);
+}
+.btn-secundario:hover {
+  background-color: rgba(11, 61, 104, 0.08);
+}
+.btn-aprobar {
+  background-color: var(--color-exito);
+  padding: 7px 14px;
+  font-size: 0.85rem;
+}
+.btn-aprobar:hover {
+  background-color: #17663a;
+}
+.btn-pequeno {
+  padding: 7px 14px;
+  font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   12) PESTAÑAS (login / registro)
+   -------------------------------------------------------------------------- */
+.pestanas {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--color-borde);
+}
+.pestana {
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-family: inherit;
+}
+.pestana.activa {
+  color: var(--color-primario);
+  border-bottom-color: var(--color-primario);
+}
+/* Los paneles ocultos usan la clase "oculto" */
+.oculto {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   13) SELLO DE APROBADO (el paralelo con el sello de goma sobre el papel)
+   -------------------------------------------------------------------------- */
+.sello {
+  display: inline-block;
+  color: var(--color-exito);
+  border: 3px double var(--color-exito);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  /* rotado como un sello puesto a mano, y semitransparente como tinta */
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  text-align: center;
+  line-height: 1.2;
+}
+.sello .sello-fecha {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  opacity: 0.9;
+}
+
+/* Etiquetas de estado (pendiente / aprobado) */
+.estado {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.estado-pendiente {
+  background-color: rgba(201, 162, 39, 0.18);
+  color: #8a6d10;
+}
+.estado-aprobado {
+  background-color: rgba(30, 125, 70, 0.18);
+  color: var(--color-exito);
+}
+body.modo-oscuro .estado-pendiente {
+  color: var(--color-acento);
+}
+
+/* --------------------------------------------------------------------------
+   14) FOOTER
+   -------------------------------------------------------------------------- */
+.pie {
+  background-color: var(--color-primario);
+  color: #dce8f3;
+  padding: 26px 0;
+  margin-top: 40px;
+}
+.pie .contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pie h4 {
+  color: #fff;
+  margin-bottom: 6px;
+}
+.pie p {
+  font-size: 0.88rem;
+  margin: 2px 0;
+}
+
+/* --------------------------------------------------------------------------
+   15) UTILIDADES Y RESPONSIVE
+   -------------------------------------------------------------------------- */
+.texto-centro { text-align: center; }
+.mb-0 { margin-bottom: 0; }
+.mt-2 { margin-top: 16px; }
+.nota-info {
+  background-color: rgba(11, 61, 104, 0.06);
+  border-left: 4px solid var(--color-primario);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+}
+
+/* En pantallas chicas, las filas de dos columnas pasan a una sola */
+@media (max-width: 640px) {
+  .fila {
+    grid-template-columns: 1fr;
+  }
+  .marca .titulos h1 {
+    font-size: 1rem;
+  }
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+}
